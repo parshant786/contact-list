@@ -1,14 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router";
 
- const HomePage = ({ list, setlist }) => {
+const HomePage = ({ list, setlist }) => {
   const navigate = useNavigate();
+
   const handleAddToContact = () => {
     navigate("/addContact");
   };
+
   const handleEdit = (id) => {
     navigate(`/editContact/${id}`);
   };
+
   const handleDelete = (id) => {
     const index = list.findIndex((contact) => {
       return contact.id === id;
@@ -23,6 +26,7 @@ import { useNavigate } from "react-router";
       });
     }
   };
+
   const compare = (a, b) => {
     if (a.name < b.name) {
       return -1;
@@ -42,6 +46,7 @@ import { useNavigate } from "react-router";
             return (
               <div key={contact.id}>
                 {contact.name}
+                <img src={contact.profilePicture} alt="photoj" />
                 <button
                   onClick={() => {
                     handleEdit(contact.id);
@@ -70,4 +75,5 @@ import { useNavigate } from "react-router";
     </div>
   );
 };
+
 export default HomePage;

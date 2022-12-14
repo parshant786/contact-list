@@ -1,7 +1,10 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router";
+import { storage } from "../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
-export const AddContactPage = ({ setList,list }) => {
+export const AddContactPage = ({ setList }) => {
   const nameInput = useRef();
   const phoneNumberInput = useRef();
   const typeInput = useRef();
@@ -9,27 +12,36 @@ export const AddContactPage = ({ setList,list }) => {
   const whatsAppInput = useRef();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newContact = {
-      id: Date.now(),
-      name: nameInput.current.value,
-      phone: phoneNumberInput.current.value,
-      type: typeInput.current.value,
-      profilePicture: imageURLInput.current.value,
-      isWhatsApp: whatsAppInput.current.value,
-    };
-    setList((pre) => {
-      return [...pre, newContact];
-    });
-    nameInput.current.value = "";
-    phoneNumberInput.current.value = "";
-    imageURLInput.current.value = "";
-  
+    const image = imageURLInput.current.files[0];
+    if (image !== null) {
+      try {
+        const imageRef = ref(storage, `images/${image.name + v4()}`);
+        const snapshot = await uploadBytes(imageRef, image);
+        const path = await getDownloadURL(snapshot.ref);
+        const newContact = {
+          id: Date.now(),
+          name: nameInput.current.value,
+          phone: phoneNumberInput.current.value,
+          type: typeInput.current.value,
+          profilePicture: path || null,
+          isWhatsApp: whatsAppInput.current.value,
+        };
+        setList((pre) => {
+          return [...pre, newContact];
+        });
+        nameInput.current.value = "";
+        phoneNumberInput.current.value = "";
+        imageURLInput.current.value = "";
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
-  const handleHome=()=>{
-     navigate("/");
-  }
+  const handleHome = () => {
+    navigate("/");
+  };
 
   return (
     <div>
@@ -46,7 +58,7 @@ export const AddContactPage = ({ setList,list }) => {
           <option value="personal">personal</option>
         </select>
         <br />
-        image url :<input type="text" ref={imageURLInput} />
+        image url :<input type="file" ref={imageURLInput} />
         <br />
         whatsapp active:
         <select ref={whatsAppInput}>

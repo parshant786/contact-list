@@ -24,7 +24,7 @@ export const EditContactPage = ({ list, setList }) => {
     const index = list.findIndex((contact) => {
       return contact.id.toString() === editContactId;
     });
-    console.log(index, editContactId);
+   
     setList((pre) => {
       const arr = [...pre];
       arr[index] = newData;
