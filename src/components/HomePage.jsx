@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { ContactCard } from "./ContactCard";
 
 const HomePage = ({ list, setlist }) => {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ const HomePage = ({ list, setlist }) => {
     const index = list.findIndex((contact) => {
       return contact.id === id;
     });
-    console.log(index);
 
     if (window.confirm("Press a button!")) {
       setlist((pre) => {
@@ -38,39 +38,18 @@ const HomePage = ({ list, setlist }) => {
   };
 
   return (
-    <div>
-      Home
+    <div className="home-container">
+      <div className="home-header">
+        <div className="home-text">Home</div> <button onClick={handleAddToContact}>add to contact</button>
+      </div>
       {list.sort(compare).length ? (
-        <div>
+        <div className="list-container">
           {list.map((contact) => {
-            return (
-              <div key={contact.id}>
-                {contact.name}
-                <img src={contact.profilePicture} alt="photoj" />
-                <button
-                  onClick={() => {
-                    handleEdit(contact.id);
-                  }}
-                >
-                  edit
-                </button>
-                <button
-                  onClick={() => {
-                    handleDelete(contact.id);
-                  }}
-                >
-                  delete
-                </button>
-              </div>
-            );
+            return <ContactCard contact={contact} handleDelete={handleDelete} handleEdit={handleEdit} />;
           })}
-          <button onClick={handleAddToContact}>add to contact</button>
         </div>
       ) : (
-        <div>
-          no contact found
-          <button onClick={handleAddToContact}>add to contact</button>
-        </div>
+        <div className="default-not-found">no contact found</div>
       )}
     </div>
   );

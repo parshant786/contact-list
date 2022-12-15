@@ -1,6 +1,10 @@
+ 
 import React, { useRef } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
+import { storage } from "../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 export const EditContactPage = ({ list, setList }) => {
   const params = useParams();
@@ -11,21 +15,26 @@ export const EditContactPage = ({ list, setList }) => {
   const typeInput = useRef();
   const imageURLInput = useRef();
   const whatsAppInput = useRef();
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    const newData = {
-      id: editContactId,
-      name: nameInput.current.value,
-      phone: phoneNumberInput.current.value,
-      type: typeInput.current.value,
-      profilePicture: imageURLInput.current.value,
-      isWhatsApp: whatsAppInput.current.value,
-    };
+    const image = imageURLInput.current.files[0];
+    if (image !== null) {
+      try {
+        const imageRef = ref(storage, `images/${image.name + v4()}`);
+        const snapshot = await uploadBytes(imageRef, image);
+        const path = await getDownloadURL(snapshot.ref);
+        const newData = {
+          id: editContactId,
+          name: nameInput.current.value,
+          phone: phoneNumberInput.current.value,
+          type: typeInput.current.value,
+          profilePicture: path || null,
+          isWhatsApp: whatsAppInput.current.value,
+        };
     const index = list.findIndex((contact) => {
-      return contact.id.toString() === editContactId;
-    });
-   
-    setList((pre) => {
+        return contact.id.toString() === editContactId;
+      });
+     setList((pre) => {
       const arr = [...pre];
       arr[index] = newData;
       return arr;
@@ -34,11 +43,16 @@ export const EditContactPage = ({ list, setList }) => {
     phoneNumberInput.current.value = "";
     imageURLInput.current.value = "";
     navigate("/");
+    
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   return (
     <div>
-      EditContactPage
+      <div className="editPage-header">EditContactPage</div>
       <form onSubmit={handleSubmit}>
         {" "}
         name :<input type="text" ref={nameInput} />
@@ -51,7 +65,7 @@ export const EditContactPage = ({ list, setList }) => {
           <option value="personal">personal</option>
         </select>
         <br />
-        image url :<input type="text" ref={imageURLInput} />
+        image url :<input type="file" ref={imageURLInput} />
         <br />
         whatsapp active:
         <select ref={whatsAppInput}>
@@ -63,3 +77,34 @@ export const EditContactPage = ({ list, setList }) => {
     </div>
   );
 };
+// const image = imageURLInput.current.files[0];
+// if (image !== null) {
+//   try {
+//     const imageRef = ref(storage, `images/${image.name + v4()}`);
+//     const snapshot = await uploadBytes(imageRef, image);
+//     const path = await getDownloadURL(snapshot.ref);
+//     const newData = {
+//    id: editContactId,
+//       name: nameInput.current.value,
+//       phone: phoneNumberInput.current.value,
+//       type: typeInput.current.value,
+//       profilePicture: path || null,
+//       isWhatsApp: whatsAppInput.current.value,
+//     };
+// const index = list.findIndex((contact) => {
+//     return contact.id.toString() === editContactId;
+//   });
+//  setList((pre) => {
+//   const arr = [...pre];
+//   arr[index] = newData;
+//   return arr;
+// });
+// nameInput.current.value = "";
+// phoneNumberInput.current.value = "";
+// imageURLInput.current.value = "";
+// navigate("/");
+
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }

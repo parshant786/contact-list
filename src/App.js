@@ -8,10 +8,10 @@ import { getListFromLocalstorage } from "./utils";
 
 const LazyHome = React.lazy(() => import("./components/HomePage"));
 
-const conactList = getListFromLocalstorage();
+const contactList = getListFromLocalstorage();
 
 function App() {
-  let [list, setList] = useState(conactList);
+  let [list, setList] = useState(contactList);
 
   useEffect(() => {
     localStorage.setItem("LIST", JSON.stringify(list));
