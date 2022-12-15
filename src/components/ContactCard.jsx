@@ -4,7 +4,7 @@ export const ContactCard = ({ handleDelete, handleEdit, contact }) => {
   let { name, phone, type, profilePicture, isWhatsApp, id } = contact;
 
   return (
-    <div className="card-container" key={contact.id}>
+    <div className="card-container" >
       <div className="img-container"><img src={profilePicture} alt="photoj" /></div>
       
       <div>{name}</div>

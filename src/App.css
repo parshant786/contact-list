@@ -43,7 +43,7 @@ img{
   height: 100%;
   
 }
-/* edit-page */
+/*   edit-page    */
 .editPage-header{
   font-weight: 800;
   height: 8vh;
@@ -51,8 +51,25 @@ img{
   text-align: center;
   padding: 2px;
 }
-
-
+.from-container{
+  width: 40vw;
+  margin: auto;
+  padding: 15px;
+  margin-top: 20px;
+}
+label {
+  display: inline-block;
+  width: 25%;
+  text-align: left;
+}
+.btn-submit{
+  width: 80%;
+  margin-bottom: 2px;
+}
+.form-line{
+  padding: 2px;
+  margin-bottom: 5px;
+}
 
 
 

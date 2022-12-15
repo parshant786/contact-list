@@ -45,7 +45,7 @@ const HomePage = ({ list, setlist }) => {
       {list.sort(compare).length ? (
         <div className="list-container">
           {list.map((contact) => {
-            return <ContactCard contact={contact} handleDelete={handleDelete} handleEdit={handleEdit} />;
+            return <ContactCard contact={contact} handleDelete={handleDelete} handleEdit={handleEdit}  key={contact.id}/>;
           })}
         </div>
       ) : (
