@@ -16,14 +16,14 @@ export const ContactCard = ({ handleDelete, handleEdit, contact }) => {
           handleEdit(id);
         }}
       >
-        edit
+        Edit
       </button>
       <button
         onClick={() => {
           handleDelete(id);
         }}
       >
-        delete
+        Delete
       </button>
     </div>
   );
